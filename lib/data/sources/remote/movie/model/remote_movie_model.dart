@@ -27,6 +27,17 @@ class RemoteMovieModel {
       releaseDate: json['release_date'] as String?,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'poster_path': posterPath,
+      'overview': overview,
+      'vote_average': voteAverage,
+      'release_date': releaseDate,
+    };
+  }
 }
 
 extension RemoteMovieModelMapper on RemoteMovieModel {
