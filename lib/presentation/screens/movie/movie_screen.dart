@@ -96,54 +96,56 @@ class _MovieScreenState extends BaseState<MovieScreen> {
     return Scaffold(
       backgroundColor: ColorManager.background,
       appBar: buildAppBarWidget(title: 'Movie Discovery'),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: SearchTextFieldWidget(
-              controller: _searchController,
-              onSubmitted: _onSearch,
-              onChanged: _onSearchChanged,
-              onClear: _onClearSearch,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: SearchTextFieldWidget(
+                controller: _searchController,
+                onSubmitted: _onSearch,
+                onChanged: _onSearchChanged,
+                onClear: _onClearSearch,
+              ),
             ),
-          ),
-          Expanded(
-            child: BlocConsumer<MovieBloc, MovieState>(
-              listener: (context, state) {
-                if (state is MovieShowLoadingState) {
-                  showLoading();
-                } else if (state is MovieHideLoadingState) {
-                  hideLoading();
-                }
-              },
-              buildWhen: (previous, current) {
-                return current is SuccessGetMoviesState ||
-                    current is FailGetMoviesState ||
-                    current is MovieShowSkeletonState ||
-                    current is MovieResetState;
-              },
-              builder: (context, state) {
-                if (state is MovieShowSkeletonState) {
-                  return const MovieSkeletonEffectWidget();
-                }
-                if (state is FailGetMoviesState) {
-                  return CustomEmptyListWidget(
-                    message: state.message,
-                    icon: Icons.wifi_off_rounded,
-                    onRetry: _onRetry,
-                  );
-                }
-                if (state is SuccessGetMoviesState) {
-                  if (state.movies.isEmpty) {
-                    return const CustomEmptyListWidget();
+            Expanded(
+              child: BlocConsumer<MovieBloc, MovieState>(
+                listener: (context, state) {
+                  if (state is MovieShowLoadingState) {
+                    showLoading();
+                  } else if (state is MovieHideLoadingState) {
+                    hideLoading();
                   }
-                  return _buildMovieGrid(state.movies);
-                }
-                return const SizedBox.shrink();
-              },
+                },
+                buildWhen: (previous, current) {
+                  return current is SuccessGetMoviesState ||
+                      current is FailGetMoviesState ||
+                      current is MovieShowSkeletonState ||
+                      current is MovieResetState;
+                },
+                builder: (context, state) {
+                  if (state is MovieShowSkeletonState) {
+                    return const MovieSkeletonEffectWidget();
+                  }
+                  if (state is FailGetMoviesState) {
+                    return CustomEmptyListWidget(
+                      message: state.message,
+                      icon: Icons.wifi_off_rounded,
+                      onRetry: _onRetry,
+                    );
+                  }
+                  if (state is SuccessGetMoviesState) {
+                    if (state.movies.isEmpty) {
+                      return const CustomEmptyListWidget();
+                    }
+                    return _buildMovieGrid(state.movies);
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
