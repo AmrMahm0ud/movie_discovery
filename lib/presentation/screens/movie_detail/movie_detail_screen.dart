@@ -59,6 +59,8 @@ class _MovieDetailScreenState extends BaseState<MovieDetailScreen> {
               message: state.message,
               icon: Icons.wifi_off_rounded,
               onRetry: () {
+
+
                 context.read<MovieDetailBloc>().add(
                   GetMovieDetailCallApiEvent(movieId: widget.movieId),
                 );
